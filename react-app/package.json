@@ -1,22 +1,22 @@
 {
-  "name": "main-app",
+  "name": "react-app",
   "private": true,
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --port 5002",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview --port 5002"
   },
   "dependencies": {
-    "vue": "^3.3.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^4.2.3",
+    "@originjs/vite-plugin-federation": "^1.1.5",
+    "@types/react": "^18.2.15",
+    "@types/react-dom": "^18.2.7",
     "@vitejs/plugin-react": "^4.0.3",
-    "vite": "^4.4.0",
-    "@originjs/vite-plugin-federation": "^1.1.5"
+    "vite": "^4.4.0"
   }
 } 

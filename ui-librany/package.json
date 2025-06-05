@@ -4,9 +4,9 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --port 5001",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview --port 5001"
   },
   "dependencies": {
     "vue": "^3.3.4"

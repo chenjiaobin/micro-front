@@ -5,123 +5,154 @@
 ## 项目结构
 
 ```
-├── main-app/          # 主应用
+├── main-app/          # Vue 主应用
 │   ├── src/
-│   │   ├── App.vue    # 主应用入口组件
-│   │   └── main.js    # 主应用入口文件
+│   │   ├── components/
+│   │   │   └── ReactWrapper.vue  # React 组件包装器
+│   │   └── App.vue
+│   ├── package.json
+│   └── vite.config.js
+├── react-app/         # React 远程模块
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── Counter.jsx
+│   │   │   └── TodoList.jsx
+│   │   ├── App.jsx
+│   │   └── main.jsx
 │   ├── index.html
 │   ├── package.json
 │   └── vite.config.js
-│
-└── ui-librany/        # 远程模块（UI组件库）
+└── ui-library/        # Vue 远程模块
     ├── src/
     │   ├── components/
-    │   │   ├── Button.vue  # 按钮组件
-    │   │   └── Card.vue    # 卡片组件
-    │   ├── App.vue
-    │   └── main.js
-    ├── index.html
+    │   │   ├── Card.vue
+    │   │   └── Button.vue
+    │   └── index.js
     ├── package.json
     └── vite.config.js
 ```
 
 ## 技术栈
 
-- Vue 3
-- Vite
-- Module Federation (@originjs/vite-plugin-federation)
+- **主应用**：Vue 3 + Vite
+- **React 远程模块**：React 18 + Vite
+- **Vue 远程模块**：Vue 3 + Vite
+- **构建工具**：Vite
+- **模块联邦**：@originjs/vite-plugin-federation
 
 ## 功能特性
 
-- 基于 Vite 的模块联邦实现
-- 远程组件共享
-- 组件间数据传递
-- 事件通信
+1. **Vue 和 React 组件混合使用**
+   - 使用 ReactWrapper 组件在 Vue 应用中渲染 React 组件
+   - 支持 React 组件的异步加载
+   - 实现组件间的数据传递和事件通信
 
-## 快速开始
+2. **远程模块加载**
+   - 支持 Vue 和 React 远程组件的动态加载
+   - 实现模块间的依赖共享
+   - 优化加载性能和资源利用
 
-### 1. 安装依赖
+3. **组件通信**
+   - Vue 和 React 组件间的事件传递
+   - Props 的双向绑定
+   - 状态管理的统一处理
 
+## 开发指南
+
+### 环境要求
+- Node.js >= 16
+- npm >= 7
+
+### 安装依赖
 ```bash
-# 安装远程模块依赖
-cd ui-librany
-npm install
-
 # 安装主应用依赖
-cd ../main-app
+cd main-app
+npm install
+
+# 安装 React 远程模块依赖
+cd ../react-app
+npm install
+
+# 安装 Vue 远程模块依赖
+cd ../ui-library
 npm install
 ```
 
-### 2. 构建远程模块
-
+### 开发模式
 ```bash
-cd ui-librany
-npm run build
-npm run preview
-```
+# 启动 React 远程模块
+cd react-app
+npm run dev
 
-### 3. 启动主应用
+# 启动 Vue 远程模块
+cd ui-library
+npm run dev
 
-```bash
+# 启动主应用
 cd main-app
 npm run dev
 ```
 
-## 项目说明
+### 构建部署
+```bash
+# 构建 React 远程模块
+cd react-app
+npm run build
+npm run preview -- --port 5002
 
-### 远程模块 (ui-library)
+# 构建 Vue 远程模块
+cd ui-library
+npm run build
+npm run preview -- --port 5001
 
-远程模块提供了两个可复用的组件：
-
-1. Button 组件
-   - 支持多种类型：primary、secondary、danger
-   - 可自定义样式
-   - 支持点击事件
-
-2. Card 组件
-   - 支持标题、内容、底部插槽
-   - 可自定义内容
-   - 支持按钮显示和事件处理
-
-### 主应用 (main-app)
-
-主应用通过模块联邦引用远程模块的组件，实现了：
-
-- 组件的远程加载
-- 组件间的数据传递
-- 事件通信
-- 样式隔离
-
-## 开发指南
-
-### 添加新的远程组件
-
-1. 在 `ui-librany/src/components` 中创建新组件
-2. 在 `ui-librany/vite.config.js` 中配置暴露组件：
-
-```js
-federation({
-  exposes: {
-    './NewComponent': './src/components/NewComponent.vue'
-  }
-})
-```
-
-### 在主应用中使用远程组件
-
-```js
-import { defineAsyncComponent } from 'vue'
-
-const RemoteComponent = defineAsyncComponent(() => 
-  import('ui-library/NewComponent')
-)
+# 构建主应用
+cd main-app
+npm run build
+npm run preview
 ```
 
 ## 注意事项
 
-1. 确保远程模块和主应用使用相同版本的 Vue
-2. 远程模块需要先构建并运行
-3. 注意组件间的数据传递和事件通信
+1. **React 组件集成**
+   - 使用 `shallowRef` 存储 React 组件
+   - 通过 `ReactWrapper` 组件进行渲染
+   - 确保正确访问组件的默认导出
+   - 注意组件生命周期的管理
+
+2. **模块联邦配置**
+   - 确保远程模块的端口配置正确
+   - 共享依赖版本需要保持一致
+   - 注意模块加载顺序
+
+3. **开发调试**
+   - 使用浏览器开发工具监控模块加载
+   - 检查网络请求确保资源正确加载
+   - 注意跨域配置
+
+## 常见问题
+
+1. **React 组件加载失败**
+   - 检查模块导入方式是否正确
+   - 确认组件是否正确导出
+   - 验证 ReactWrapper 组件的使用
+
+2. **样式冲突**
+   - 使用 CSS Modules 或 scoped 样式
+   - 注意样式优先级
+   - 避免全局样式污染
+
+3. **性能优化**
+   - 合理使用异步加载
+   - 优化组件重渲染
+   - 注意内存泄漏问题
+
+## 贡献指南
+
+1. Fork 项目
+2. 创建特性分支
+3. 提交更改
+4. 推送到分支
+5. 创建 Pull Request
 
 ## 许可证
 
